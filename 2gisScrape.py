@@ -1,14 +1,14 @@
 import urllib.request
 from bs4 import BeautifulSoup
 import pandas as pd
-for i in range(1,5):
+for i in range(1,2):
+  print("HI")
   url = "https://2gis.kz/almaty/search/%D0%B5%D0%B4%D0%B0/page/{}?queryState=center%2F76.945152%2C43.23845%2Fzoom%2F12"
   source = urllib.request.urlopen(url.format(i)).read()
   soup = BeautifulSoup(source)
   content = soup.find_all("div",class_="searchResults__content")
 
   titles_of_restaurants = [i.get('alt', None) for i in soup.find_all('img')]
-  titles_of_restaurants
   info = [i.text for i in soup.find_all('div',class_ = 'miniCard__micro')]
 
   address = [i.text for i in soup.find_all('div',class_ = 'miniCard__desc _address')]
@@ -19,14 +19,25 @@ for i in range(1,5):
       average_check.append(i.text)
 
 
-  i = len(titles_of_restaurants)
-  k = len(address)
-  while(k != i):
+  len_restaurants = len(titles_of_restaurants)
+  while(len(address) < len_restaurants):
     address.append('none')
-  k = len(average_check)
-  while(k != i):
-    address.append('none')
-  import pandas as pd
+
+  while(len(average_check) < len_restaurants):
+    average_check.append('none')
+  
+  print(len(titles_of_restaurants))
+  print(len(info))
+  print(len(address))
+  print(len(average_check))
+  
+  print(titles_of_restaurants)
+  print(info)
+  print(address)
+  print(average_check)
+
   data = {'title_of_restaurant': titles_of_restaurants, 'description': info,'address':address,'average check':average_check}
+  print(data)
   df = pd.DataFrame(data=data)
+  print(df.head())
   df.to_excel(("output%d.xlsx")%(i))
